@@ -4,7 +4,7 @@ CareerLens 是一个面向 AI 求职研究的学习型项目。项目将逐步�
 
 ## 当前进度
 
-目前可以校验单条岗位数据，也可以读取包含多条岗位的 JSON 数组，将合法数据和非法数据分开保存。
+目前可以校验和过滤岗位数据，并通过命令行展示、搜索、筛选和统计合法岗位。
 
 `validate_job(job)` 接收字典或其他映射对象，并检查以下必填字段：
 
@@ -23,16 +23,21 @@ CareerLens 是一个面向 AI 求职研究的学习型项目。项目将逐步�
 careerlens/
 ├─ src/careerlens/
 │  ├─ __init__.py
+│  ├─ catalog.py
+│  ├─ explore_jobs.py
 │  ├─ filter_jobs.py
 │  ├─ validator.py
 │  └─ validate_file.py
 ├─ tests/
+│  ├─ test_catalog.py
 │  ├─ test_filter_jobs.py
 │  ├─ test_validator.py
 │  └─ test_validate_file.py
 ├─ data/
+│  ├─ invalid_jobs.json
 │  ├─ jobs.json
-│  └─ sample_job.json
+│  ├─ sample_job.json
+│  └─ valid_jobs.json
 ├─ pyproject.toml
 ├─ uv.lock
 └─ README.md
@@ -79,7 +84,7 @@ uv run python -m careerlens.validate_file data/sample_job.json
 
 ## 批量过滤岗位数据
 
-`data/jobs.json` 包含 20 条演示数据，其中 12 条符合规则、8 条故意包含缺字段、错误类型、空内容或非法链接。
+`data/jobs.json` 包含 20 条演示数据，其中 11 条符合规则、9 条故意包含缺字段、错误类型、空内容或非法链接。
 
 运行批量过滤：
 
@@ -93,6 +98,32 @@ uv run python -m careerlens.filter_jobs data/jobs.json
 - `data/invalid_jobs.json`：非法岗位的原始序号、错误原因和原始数据。
 
 程序不会静默丢弃错误数据，因此可以根据错误报告追查数据质量问题。
+
+## 展示、搜索和筛选
+
+以下命令都使用过滤后的 `data/valid_jobs.json`：
+
+```powershell
+# 展示全部岗位
+uv run python -m careerlens.explore_jobs data/valid_jobs.json list
+
+# 在岗位名称、城市和描述中搜索
+uv run python -m careerlens.explore_jobs data/valid_jobs.json search AI
+
+# 按城市精确筛选
+uv run python -m careerlens.explore_jobs data/valid_jobs.json filter --city 杭州
+
+# 同时按城市和岗位名称筛选
+uv run python -m careerlens.explore_jobs data/valid_jobs.json filter --city 西安 --title Python
+```
+
+## 词频统计
+
+```powershell
+uv run python -m careerlens.explore_jobs data/valid_jobs.json stats
+```
+
+统计包含城市分布、岗位关键词频次和技能关键词频次。V0 使用代码中明确列出的关键词进行匹配；同一关键词在同一岗位中重复出现时只计算一次。
 
 ## 使用示例
 
@@ -125,10 +156,10 @@ print(cleaned_job)
 
 - `source_url` 只检查协议和基本结构，不访问网络，也不保证页面真实存在。
 - 当前批量文件必须以 JSON 数组作为最外层结构。
-- 当前尚未实现按条件搜索、筛选和统计。
+- 岗位和技能词频使用预定义关键词匹配，还没有中文分词、同义词归并和 AI 信息抽取。
 
 ## 后续计划
 
-1. 增加岗位列表展示、搜索和筛选。
-2. 统计城市、岗位和技能词频。
-3. 导出 Markdown 分析报告。
+1. 导出 Markdown 分析报告。
+2. 扩充岗位字段和真实样本数据。
+3. 为搜索增加排序和组合条件。
