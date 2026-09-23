@@ -1,0 +1,68 @@
+[
+  {
+    "title": "AI 应用开发工程师",
+    "city": "杭州",
+    "description": "负责大模型应用与业务系统集成",
+    "source_url": "https://example.com/jobs/2"
+  },
+  {
+    "title": "机器学习工程师",
+    "city": "深圳",
+    "description": "负责模型训练、评估和部署",
+    "source_url": "https://example.com/jobs/3"
+  },
+  {
+    "title": "数据开发工程师",
+    "city": "南京",
+    "description": "负责数据清洗、建模和任务调度",
+    "source_url": "https://example.com/jobs/4"
+  },
+  {
+    "title": "RAG 应用工程师",
+    "city": "合肥",
+    "description": "负责知识库检索与问答效果评测",
+    "source_url": "https://example.com/jobs/5"
+  },
+  {
+    "title": "LLM 平台开发工程师",
+    "city": "杭州",
+    "description": "负责模型服务、限流和可观测性建设",
+    "source_url": "https://example.com/jobs/6"
+  },
+  {
+    "title": "Python 测试开发工程师",
+    "city": "西安",
+    "description": "负责接口自动化与质量平台开发",
+    "source_url": "https://example.com/jobs/7"
+  },
+  {
+    "title": "AI 后端实习生",
+    "city": "南京",
+    "description": "参与 AI 产品后端接口开发",
+    "source_url": "https://example.com/jobs/8"
+  },
+  {
+    "title": "智能搜索工程师",
+    "city": "深圳",
+    "description": "负责关键词检索、向量检索与排序",
+    "source_url": "https://example.com/jobs/9"
+  },
+  {
+    "title": "NLP 工程师",
+    "city": "合肥",
+    "description": "负责文本分类和信息抽取",
+    "source_url": "https://example.com/jobs/10"
+  },
+  {
+    "title": "FastAPI 开发工程师",
+    "city": "杭州",
+    "description": "负责高质量 Web API 的设计与实现",
+    "source_url": "https://example.com/jobs/11"
+  },
+  {
+    "title": "AI 平台运维开发工程师",
+    "city": "深圳",
+    "description": "负责模型服务部署、监控和故障排查",
+    "source_url": "https://example.com/jobs/12"
+  }
+]

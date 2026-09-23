@@ -1,0 +1,91 @@
+[
+  {
+    "index": 1,
+    "error": "字段 city 不能为空",
+    "data": {
+      "title": "Python 后端开发工程师",
+      "city": "",
+      "description": "城市字段使用了错误类型",
+      "source_url": "https://example.com/jobs/1"
+    }
+  },
+  {
+    "index": 13,
+    "error": "缺少必填字段：title",
+    "data": {
+      "city": "西安",
+      "description": "这条数据缺少岗位名称",
+      "source_url": "https://example.com/jobs/13"
+    }
+  },
+  {
+    "index": 14,
+    "error": "字段 city 必须是字符串",
+    "data": {
+      "title": "数据工程师",
+      "city": 123,
+      "description": "城市字段使用了错误类型",
+      "source_url": "https://example.com/jobs/14"
+    }
+  },
+  {
+    "index": 15,
+    "error": "字段 description 不能为空",
+    "data": {
+      "title": "算法工程师",
+      "city": "杭州",
+      "description": "   ",
+      "source_url": "https://example.com/jobs/15"
+    }
+  },
+  {
+    "index": 16,
+    "error": "字段 source_url 不是有效的 HTTP/HTTPS 地址",
+    "data": {
+      "title": "后端开发工程师",
+      "city": "南京",
+      "description": "来源链接协议不受支持",
+      "source_url": "ftp://example.com/jobs/16"
+    }
+  },
+  {
+    "index": 17,
+    "error": "字段 title 不能为空",
+    "data": {
+      "title": "",
+      "city": "合肥",
+      "description": "岗位名称为空",
+      "source_url": "https://example.com/jobs/17"
+    }
+  },
+  {
+    "index": 18,
+    "error": "字段 source_url 不是有效的 HTTP/HTTPS 地址",
+    "data": {
+      "title": "模型服务工程师",
+      "city": "深圳",
+      "description": "来源链接缺少主机名",
+      "source_url": "https://"
+    }
+  },
+  {
+    "index": 19,
+    "error": "字段 description 必须是字符串",
+    "data": {
+      "title": "AI 产品开发工程师",
+      "city": "西安",
+      "description": null,
+      "source_url": "https://example.com/jobs/19"
+    }
+  },
+  {
+    "index": 20,
+    "error": "字段 source_url 不是有效的 HTTP/HTTPS 地址",
+    "data": {
+      "title": "检索工程师",
+      "city": "杭州",
+      "description": "来源链接中包含空格",
+      "source_url": "https://example.com/jobs/20 bad"
+    }
+  }
+]

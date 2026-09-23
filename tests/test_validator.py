@@ -40,7 +40,7 @@ def test_rejects_missing_field() -> None:
 
 def test_rejects_non_string_field() -> None:
     job = sample_job()
-    job["city"] = ""
+    job["city"] = 123
 
     with pytest.raises(JobValidationError, match="city"):
         validate_job(job)
@@ -59,4 +59,12 @@ def test_rejects_non_http_url() -> None:
     job["source_url"] = "ftp://example.com/jobs/1"
 
     with pytest.raises(JobValidationError, match="source_url"):
+        validate_job(job)
+
+# 添加注释：用于验证 `validate_job` 函数是否正确处理包含仅有空白字符的字段。
+def test_rejects_empty_field_with_whitespace() -> None:
+    job = sample_job()
+    job["description"] = "   "
+
+    with pytest.raises(JobValidationError, match="description"):
         validate_job(job)
