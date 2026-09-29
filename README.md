@@ -4,7 +4,7 @@ CareerLens 是一个面向 AI 求职研究的学习型项目。项目将逐步�
 
 ## 当前进度
 
-目前可以校验、清洗、过滤和去重岗位数据，并通过命令行展示、搜索、筛选和统计合法岗位。
+目前可以校验、清洗、过滤和去重岗位数据，并通过命令行展示、搜索、筛选、统计和导出 Markdown 报告。
 
 `validate_job(job)` 接收字典或其他映射对象，并检查以下必填字段：
 
@@ -25,6 +25,7 @@ careerlens/
 │  ├─ __init__.py
 │  ├─ catalog.py
 │  ├─ deduplicate_jobs.py
+│  ├─ export_report.py
 │  ├─ explore_jobs.py
 │  ├─ filter_jobs.py
 │  ├─ validator.py
@@ -32,6 +33,7 @@ careerlens/
 ├─ tests/
 │  ├─ test_catalog.py
 │  ├─ test_deduplicate_jobs.py
+│  ├─ test_export_report.py
 │  ├─ test_filter_jobs.py
 │  ├─ test_validator.py
 │  └─ test_validate_file.py
@@ -42,6 +44,8 @@ careerlens/
 │  ├─ jobs.json
 │  ├─ sample_job.json
 │  └─ valid_jobs.json
+├─ reports/
+│  └─ job-market-summary.md
 ├─ pyproject.toml
 ├─ uv.lock
 └─ README.md
@@ -88,7 +92,7 @@ uv run python -m careerlens.validate_file data/sample_job.json
 
 ## 批量过滤岗位数据
 
-`data/jobs.json` 当前包含 22 条演示数据，其中 12 条符合规则、10 条包含缺字段、错误类型、空内容或非法链接。
+`data/jobs.json` 当前包含 23 条演示数据，其中 12 条符合规则、11 条包含缺字段、错误类型、空内容或非法链接。
 
 运行批量过滤：
 
@@ -144,6 +148,18 @@ uv run python -m careerlens.explore_jobs data/deduplicated_jobs.json stats
 
 统计包含城市分布、岗位关键词频次和技能关键词频次。V0 使用代码中明确列出的关键词进行匹配；同一关键词在同一岗位中重复出现时只计算一次。
 
+## 导出 Markdown 报告
+
+报告导出命令直接读取原始岗位数据，自动完成校验、清洗、无效数据过滤、按 `source_url` 去重和统计。报告包含处理概况、岗位总数、城市分布、常见技能和岗位列表。运行：
+
+```powershell
+uv run python -m careerlens.export_report data/jobs.json
+```
+
+默认生成 `reports/job-market-summary.md`，也可以通过 `--output` 指定路径。无效和重复岗位不会进入最终统计；报告会记录各阶段数量。报告输出路径不能与原始 JSON 路径相同。单独的过滤、去重和查询命令仍可用于检查中间结果。
+
+当前功能完成情况、学习验收状态和后续任务见 [学习进度与下一步](docs/learning-progress.md)。
+
 ## 使用示例
 
 ```python
@@ -180,6 +196,5 @@ print(cleaned_job)
 
 ## 后续计划
 
-1. 导出 Markdown 分析报告。
-2. 扩充岗位字段和真实样本数据。
-3. 为搜索增加排序和组合条件。
+1. 扩充岗位字段和真实样本数据。
+2. 为搜索增加排序和组合条件。
