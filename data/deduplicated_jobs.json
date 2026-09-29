@@ -30,12 +30,6 @@
     "source_url": "https://example.com/jobs/6"
   },
   {
-    "title": "LLM 平台开发工程师",
-    "city": "杭州",
-    "description": "负责模型服务、限流和可观测性建设",
-    "source_url": "https://example.com/jobs/6"
-  },
-  {
     "title": "Python 测试开发工程师",
     "city": "西安",
     "description": "负责接口自动化与质量平台开发",

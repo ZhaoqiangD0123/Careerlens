@@ -4,7 +4,7 @@ CareerLens 是一个面向 AI 求职研究的学习型项目。项目将逐步�
 
 ## 当前进度
 
-目前可以校验和过滤岗位数据，并通过命令行展示、搜索、筛选和统计合法岗位。
+目前可以校验、清洗、过滤和去重岗位数据，并通过命令行展示、搜索、筛选和统计合法岗位。
 
 `validate_job(job)` 接收字典或其他映射对象，并检查以下必填字段：
 
@@ -24,16 +24,20 @@ careerlens/
 ├─ src/careerlens/
 │  ├─ __init__.py
 │  ├─ catalog.py
+│  ├─ deduplicate_jobs.py
 │  ├─ explore_jobs.py
 │  ├─ filter_jobs.py
 │  ├─ validator.py
 │  └─ validate_file.py
 ├─ tests/
 │  ├─ test_catalog.py
+│  ├─ test_deduplicate_jobs.py
 │  ├─ test_filter_jobs.py
 │  ├─ test_validator.py
 │  └─ test_validate_file.py
 ├─ data/
+│  ├─ deduplicated_jobs.json
+│  ├─ duplicate_jobs.json
 │  ├─ invalid_jobs.json
 │  ├─ jobs.json
 │  ├─ sample_job.json
@@ -84,7 +88,7 @@ uv run python -m careerlens.validate_file data/sample_job.json
 
 ## 批量过滤岗位数据
 
-`data/jobs.json` 包含 20 条演示数据，其中 11 条符合规则、9 条故意包含缺字段、错误类型、空内容或非法链接。
+`data/jobs.json` 当前包含 22 条演示数据，其中 12 条符合规则、10 条包含缺字段、错误类型、空内容或非法链接。
 
 运行批量过滤：
 
@@ -99,28 +103,43 @@ uv run python -m careerlens.filter_jobs data/jobs.json
 
 程序不会静默丢弃错误数据，因此可以根据错误报告追查数据质量问题。
 
+## 按来源链接去重
+
+去重功能只接受已经通过校验和清洗的岗位数据。请先运行批量过滤，再执行：
+
+```powershell
+uv run python -m careerlens.deduplicate_jobs data/valid_jobs.json
+```
+
+命令以 `source_url` 精确匹配作为重复判断标准，并保留每个链接第一次出现的岗位。它会生成：
+
+- `data/deduplicated_jobs.json`：去重后的岗位；
+- `data/duplicate_jobs.json`：重复数据的原始序号、首次出现序号和岗位内容。
+
+如果输入数据未通过校验，或字段仍有需要清理的首尾空格，去重会停止并提示先完成清洗。
+
 ## 展示、搜索和筛选
 
-以下命令都使用过滤后的 `data/valid_jobs.json`：
+以下命令使用清洗并去重后的 `data/deduplicated_jobs.json`：
 
 ```powershell
 # 展示全部岗位
-uv run python -m careerlens.explore_jobs data/valid_jobs.json list
+uv run python -m careerlens.explore_jobs data/deduplicated_jobs.json list
 
 # 在岗位名称、城市和描述中搜索
-uv run python -m careerlens.explore_jobs data/valid_jobs.json search AI
+uv run python -m careerlens.explore_jobs data/deduplicated_jobs.json search AI
 
 # 按城市精确筛选
-uv run python -m careerlens.explore_jobs data/valid_jobs.json filter --city 杭州
+uv run python -m careerlens.explore_jobs data/deduplicated_jobs.json filter --city 杭州
 
 # 同时按城市和岗位名称筛选
-uv run python -m careerlens.explore_jobs data/valid_jobs.json filter --city 西安 --title Python
+uv run python -m careerlens.explore_jobs data/deduplicated_jobs.json filter --city 西安 --title Python
 ```
 
 ## 词频统计
 
 ```powershell
-uv run python -m careerlens.explore_jobs data/valid_jobs.json stats
+uv run python -m careerlens.explore_jobs data/deduplicated_jobs.json stats
 ```
 
 统计包含城市分布、岗位关键词频次和技能关键词频次。V0 使用代码中明确列出的关键词进行匹配；同一关键词在同一岗位中重复出现时只计算一次。
@@ -156,6 +175,7 @@ print(cleaned_job)
 
 - `source_url` 只检查协议和基本结构，不访问网络，也不保证页面真实存在。
 - 当前批量文件必须以 JSON 数组作为最外层结构。
+- 去重采用清洗后的 `source_url` 精确匹配，暂未合并带跟踪参数、不同大小写或不同尾部斜杠的等价链接。
 - 岗位和技能词频使用预定义关键词匹配，还没有中文分词、同义词归并和 AI 信息抽取。
 
 ## 后续计划
