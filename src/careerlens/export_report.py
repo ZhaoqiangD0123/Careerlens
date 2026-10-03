@@ -23,7 +23,12 @@ class ReportSummary:
 
 def _table_cell(value: str) -> str:
     """转义表格分隔符和换行，防止岗位文字打乱 Markdown 表格。"""
-    return value.replace("|", "\\|").replace("\r\n", "<br>").replace("\n", "<br>").replace("\r", "<br>")
+    return (
+        value.replace("|", "\\|")
+        .replace("\r\n", "<br>")
+        .replace("\n", "<br>")
+        .replace("\r", "<br>")
+    )
 
 
 def _count_lines(counts: dict[str, int]) -> list[str]:
@@ -48,6 +53,9 @@ def build_markdown_report(
         f"- 重复岗位：{summary.duplicate_count}",
         f"- 最终保留：{summary.kept_count}",
         "",
+        "## 岗位关键词频次",
+        *_count_lines(statistics["roles"]),
+        "",
         "## 城市分布",
         *_count_lines(statistics["cities"]),
         "",
@@ -60,9 +68,11 @@ def build_markdown_report(
     ]
     for job in jobs:
         lines.append(
-            "| " + " | ".join(
+            "| "
+            + " | ".join(
                 _table_cell(job[field]) for field in ("title", "city", "source_url")
-            ) + " |"
+            )
+            + " |"
         )
     return "\n".join(lines) + "\n"
 

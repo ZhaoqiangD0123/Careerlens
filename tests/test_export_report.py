@@ -22,10 +22,10 @@ def test_exports_summary_and_job_table_from_raw_jobs(tmp_path: Path) -> None:
     input_path = tmp_path / "jobs.json"
     output_path = tmp_path / "reports" / "summary.md"
     jobs = [
-        make_job(" AI 工程师 ", " 杭州 ", " https://example.com/jobs/1 "),
-        make_job("重复岗位", "西安", "https://example.com/jobs/1"),
-        make_job("Python 工程师", "西安", "https://example.com/jobs/2"),
-        {"title": "缺少字段"},
+        make_job(" AI 测试工程师 ", " 杭州 ", " https://example.com/jobs/1 "),
+        make_job("AI 测试工程师", "杭州", "https://example.com/jobs/1"),
+        make_job("Python 测试工程师", "西安", "https://example.com/jobs/2"),
+        {"title": "测试工程师"},
     ]
     input_path.write_text(json.dumps(jobs, ensure_ascii=False), encoding="utf-8")
 
@@ -39,8 +39,9 @@ def test_exports_summary_and_job_table_from_raw_jobs(tmp_path: Path) -> None:
     assert "- 重复岗位：1" in report
     assert "- 杭州：1" in report
     assert "- Python：2" in report
-    assert "| AI 工程师 | 杭州 | https://example.com/jobs/1 |" in report
-    assert "| 重复岗位 |" not in report
+    assert "| AI 测试工程师 | 杭州 | https://example.com/jobs/1 |" in report
+    # 断言报告中包含常见技能统计部分
+    assert "测试：2" in report
 
 
 def test_does_not_overwrite_raw_input(tmp_path: Path) -> None:
