@@ -4,7 +4,7 @@ CareerLens 是一个面向 AI 求职研究的学习型项目。项目将逐步�
 
 ## 当前进度
 
-目前可以校验、清洗、过滤和去重岗位数据，并通过命令行展示、搜索、筛选、统计和导出 Markdown 报告。
+目前可以校验、清洗、过滤和去重岗位数据，并通过命令行展示、搜索、筛选、统计和导出 Markdown 报告。新增 FastAPI 只读接口 `GET /jobs`，可以通过浏览器、Apifox 或脚本获取岗位 JSON。
 
 `validate_job(job)` 接收字典或其他映射对象，并检查以下必填字段：
 
@@ -23,14 +23,17 @@ CareerLens 是一个面向 AI 求职研究的学习型项目。项目将逐步�
 careerlens/
 ├─ src/careerlens/
 │  ├─ __init__.py
+│  ├─ api.py
 │  ├─ catalog.py
 │  ├─ deduplicate_jobs.py
 │  ├─ export_report.py
 │  ├─ explore_jobs.py
 │  ├─ filter_jobs.py
+│  ├─ job_files.py
 │  ├─ validator.py
 │  └─ validate_file.py
 ├─ tests/
+│  ├─ test_api.py
 │  ├─ test_catalog.py
 │  ├─ test_deduplicate_jobs.py
 │  ├─ test_export_report.py
@@ -79,6 +82,55 @@ pytest 会自动查找 `tests/` 中以 `test_` 开头的测试函数。目前测
 - 缺少必填字段；
 - 字段内容无效；
 - 非 HTTP/HTTPS 来源链接。
+- HTTP 岗位查询的正常、空数据、数据源失败、只读行为和每次请求重新读取；
+- 路由不存在、请求方法错误和接口文档。
+
+## 启动 HTTP 服务
+
+在项目根目录（包含 `pyproject.toml` 和 `data/` 的目录）执行：
+
+```powershell
+uv sync --group dev
+uv run uvicorn careerlens.api:app --host 127.0.0.1 --port 8000 --reload
+```
+
+终端保持运行，按 `Ctrl+C` 停止。`careerlens.api:app` 指定模块及应用对象；Uvicorn 监听本机 8000 端口，FastAPI 按请求方法与路径调用处理函数。`--reload` 仅用于开发，代码修改后自动重启。
+
+- 岗位列表：`http://127.0.0.1:8000/jobs`
+- 交互式接口文档：`http://127.0.0.1:8000/docs`
+- OpenAPI 接口描述：`http://127.0.0.1:8000/openapi.json`
+
+### GET /jobs 契约与数据流
+
+客户端 → Uvicorn → FastAPI `/jobs` 路由 → `job_files.load_validated_jobs` → JSON 响应。
+
+数据源固定为启动目录下的 `data/deduplicated_jobs.json`。服务每次请求读取并校验文件，不接受客户端指定本机文件路径，不写文件、不重新去重，也不生成报告。数据应提前由已有过滤、去重命令生成；报告导出本身不会保存中间 JSON 文件。
+
+| 场景 | 状态码与结果 |
+| --- | --- |
+| 正常读取 | 200，`{"total": 11, "items": [...]}`；总数取决于实际数据 |
+| 文件内容为 `[]` | 200，`{"total": 0, "items": []}` |
+| 文件缺失、无法读取、JSON 损坏或含非法岗位 | 500，`{"detail": "岗位数据暂时不可用，请检查服务端数据文件"}` |
+| 请求未知路径 | 404 |
+| 使用 POST 请求 `/jobs` | 405，方法不允许 |
+
+`items` 中每个岗位包含 `title`、`city`、`description` 和 `source_url`。遇到非法岗位时不会静默过滤后返回部分成功数据。详细错误写入服务端日志，响应不暴露本机文件路径。服务未启动时是连接失败，通常没有 HTTP 状态码。
+
+### 使用 Apifox 调试
+
+保持服务终端运行，在电脑上的 Apifox 中创建 HTTP 请求：
+
+- 方法：`GET`；
+- URL：`http://127.0.0.1:8000/jobs`；
+- 本次无需 Params、请求体或认证；
+- 发送后核对状态码 200、响应的 `total` 与 `items` 数量是否一致；
+- 用 `/unknown` 对比 404，再把 `/jobs` 方法改为 POST 对比 405。
+
+Apifox 是客户端，不负责启动 Python 服务。接口自动化测试仍通过 `uv run pytest -v` 运行；TestClient 在进程内调用应用，不需要先启动 Uvicorn。当前 Starlette 测试客户端使用 `httpx2`，因此将它列为开发依赖，见 [官方 TestClient 文档](https://www.starlette.io/testclient/)。
+
+已提供 [可导入 Apifox 的请求集合](docs/careerlens.postman_collection.json) 和 [导入指南](docs/apifox-guide.md)，包含用户新增的根路径、岗位列表以及 404/405 请求，并附响应断言。集合采用 Postman 格式，不需要安装 Postman；在 Apifox 中导入后核对本机环境与后置脚本。导入文件不会新增 Python 接口。
+
+第一版仅供本机学习：无认证、分页或缓存，不应直接暴露到公网。同步文件读取使用普通 `def` 路由，框架将其放在线程池中执行，见 [FastAPI 同步与异步说明](https://fastapi.tiangolo.com/async/)。
 
 ## 校验 JSON 文件
 
@@ -198,3 +250,4 @@ print(cleaned_job)
 
 1. 扩充岗位字段和真实样本数据。
 2. 为搜索增加排序和组合条件。
+3. 为 HTTP 接口增加查询参数，再接入 SQL/PostgreSQL。

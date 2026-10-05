@@ -5,18 +5,8 @@ import sys
 from pathlib import Path
 
 from careerlens.catalog import Job, build_job_statistics, filter_jobs, search_jobs
-from careerlens.filter_jobs import filter_job_records
-from careerlens.validate_file import JobFileError, read_json_file
-
-
-def load_validated_jobs(file_path: Path) -> list[Job]:
-    """读取岗位数组；只接受全部通过校验的数据文件。"""
-    result = filter_job_records(read_json_file(file_path))
-    if result.invalid_jobs:
-        raise JobFileError(
-            f"文件中有 {len(result.invalid_jobs)} 条非法数据，请先运行批量过滤命令"
-        )
-    return result.valid_jobs
+from careerlens.job_files import load_validated_jobs
+from careerlens.validate_file import JobFileError
 
 
 def print_jobs(jobs: list[Job]) -> None:

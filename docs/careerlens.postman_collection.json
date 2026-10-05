@@ -1,0 +1,219 @@
+{
+  "info": {
+    "name": "CareerLens 本机接口测试",
+    "description": "本机 FastAPI 调试集合。保持 Python 服务运行，导入后选择 baseUrl 为 http://127.0.0.1:8000 的环境。只做根路径、岗位查询和错误路径验证，不修改数据；500 和空文件场景保留给 pytest 的隔离测试。",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "noauth"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 首页 Hello World",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// 发送请求后执行：先检查状态码，再核对你新增的响应。",
+              "pm.test(\"根路径返回 200\", function () {",
+              "    pm.expect(pm.response.code).to.eql(200);",
+              "});",
+              "pm.test(\"Hello World 响应符合约定\", function () {",
+              "    pm.expect(pm.response.json()).to.eql({ Hello: \"world!\" });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": []
+        },
+        "description": "用户新增的根路径；当前响应为 {\"Hello\":\"world!\"}。"
+      },
+      "response": []
+    },
+    {
+      "name": "02 获取岗位列表",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// 这段脚本放在后置操作：检查真实响应，不修改服务端数据。",
+              "pm.test(\"岗位列表返回 200\", function () {",
+              "    pm.expect(pm.response.code).to.eql(200);",
+              "});",
+              "pm.test(\"响应类型是 JSON\", function () {",
+              "    const contentType = pm.response.headers.get(\"Content-Type\") || \"\";",
+              "    pm.expect(contentType.toLowerCase().includes(\"application/json\")).to.eql(true);",
+              "});",
+              "pm.test(\"响应包含合法的 total 和 items\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(data !== null && typeof data === \"object\" && !Array.isArray(data)).to.eql(true);",
+              "    pm.expect(Number.isInteger(data.total) && data.total >= 0).to.eql(true);",
+              "    pm.expect(Array.isArray(data.items)).to.eql(true);",
+              "});",
+              "pm.test(\"total 与岗位数组长度一致\", function () {",
+              "    const data = pm.response.json();",
+              "    // 不固定为 11：合法的数据变化不应让契约测试失败。",
+              "    pm.expect(data.total).to.eql(data.items.length);",
+              "});",
+              "pm.test(\"岗位字段完整且符合基本规则\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(Array.isArray(data.items)).to.eql(true);",
+              "    data.items.forEach(function (job) {",
+              "        pm.expect(job !== null && typeof job === \"object\" && !Array.isArray(job)).to.eql(true);",
+              "        [\"title\", \"city\", \"description\", \"source_url\"].forEach(function (field) {",
+              "            pm.expect(typeof job[field]).to.eql(\"string\");",
+              "            pm.expect(job[field].trim().length > 0).to.eql(true);",
+              "            pm.expect(job[field]).to.eql(job[field].trim());",
+              "        });",
+              "        pm.expect(/^https?:\\/\\/[^\\s/]+(?:[/?#][^\\s]*)?$/i.test(job.source_url)).to.eql(true);",
+              "    });",
+              "    // 空数组也是合法结果；逐条检查在此时没有要遍历的元素。",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/jobs",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "jobs"
+          ]
+        },
+        "description": "读取已清洗去重的数据；验证状态、JSON 结构、数量一致性和必填字段。"
+      },
+      "response": []
+    },
+    {
+      "name": "03 未知路径应返回 404",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// 请求不存在的路径；收到 404 是预期结果，并不代表测试失败。",
+              "pm.test(\"未知路径返回 404\", function () {",
+              "    pm.expect(pm.response.code).to.eql(404);",
+              "});",
+              "pm.test(\"错误响应包含 detail\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(typeof data.detail).to.eql(\"string\");",
+              "    pm.expect(data.detail.trim().length > 0).to.eql(true);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/__careerlens_test_not_found__",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "__careerlens_test_not_found__"
+          ]
+        },
+        "description": "负向请求测试，不创建新服务端路由。404 是预期响应。"
+      },
+      "response": []
+    },
+    {
+      "name": "04 不支持的方法应返回 405",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// 使用不受支持的方法：当前 /jobs 只允许 GET。",
+              "pm.test(\"POST /jobs 返回 405\", function () {",
+              "    pm.expect(pm.response.code).to.eql(405);",
+              "});",
+              "pm.test(\"错误响应包含 detail\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(typeof data.detail).to.eql(\"string\");",
+              "    pm.expect(data.detail.trim().length > 0).to.eql(true);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/jobs",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "jobs"
+          ]
+        },
+        "description": "验证 GET-only 约束；不会新增岗位。405 是预期响应。"
+      },
+      "response": []
+    }
+  ]
+}
