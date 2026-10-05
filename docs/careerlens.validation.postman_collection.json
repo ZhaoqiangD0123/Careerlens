@@ -1,0 +1,589 @@
+{
+  "info": {
+    "name": "CareerLens 请求体校验练习",
+    "description": "九个 POST /jobs/validate 用例。请导入单独目录并核对 Body 与脚本；同方法路径可能转换为不同测试用例。成功 200、输入错误 422，不保存岗位、不读取文件，不包含认证信息。",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "noauth"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 合法岗位返回清洗结果",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// 后置断言只核对响应；POST /jobs/validate 不保存任何岗位。",
+              "pm.test(\"状态码符合本用例预期 200\", function () {",
+              "    pm.expect(pm.response.code).to.eql(200);",
+              "});",
+              "pm.test(\"响应是 JSON\", function () {",
+              "    const contentType = pm.response.headers.get(\"Content-Type\") || \"\";",
+              "    pm.expect(contentType.toLowerCase().includes(\"application/json\")).to.eql(true);",
+              "});",
+              "pm.test(\"返回清洗后的四字段对象\", function () {",
+              "    // 完整对象比较也能发现错误保留额外字段或返回列表结构。",
+              "    pm.expect(pm.response.json()).to.eql({\"title\":\"Python 后端工程师\",\"city\":\"杭州\",\"description\":\"使用 FastAPI 开发岗位服务\",\"source_url\":\"https://example.com/jobs/body-demo\"});",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "auth": {
+          "type": "noauth"
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/jobs/validate",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "jobs",
+            "validate"
+          ]
+        },
+        "description": "V1a-03 请求体校验。只校验，不保存；422 是本用例预期输入失败，不是服务端故障。",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \" Python 后端工程师 \",\n  \"city\": \" 杭州 \",\n  \"description\": \" 使用 FastAPI 开发岗位服务 \",\n  \"source_url\": \" https://example.com/jobs/body-demo \"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "02 缺少 description",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// 后置断言只核对响应；POST /jobs/validate 不保存任何岗位。",
+              "pm.test(\"状态码符合本用例预期 422\", function () {",
+              "    pm.expect(pm.response.code).to.eql(422);",
+              "});",
+              "pm.test(\"响应是 JSON\", function () {",
+              "    const contentType = pm.response.headers.get(\"Content-Type\") || \"\";",
+              "    pm.expect(contentType.toLowerCase().includes(\"application/json\")).to.eql(true);",
+              "});",
+              "pm.test(\"结构错误 detail 是非空错误列表\", function () {",
+              "    const errors = pm.response.json().detail;",
+              "    pm.expect(Array.isArray(errors)).to.eql(true);",
+              "    pm.expect(errors.length > 0).to.eql(true);",
+              "});",
+              "pm.test(\"错误定位到对应 Body 字段\", function () {",
+              "    const expectedLocation = [\"body\", \"description\"];",
+              "    const errors = pm.response.json().detail;",
+              "    pm.expect(errors.some(function (error) {",
+              "        return JSON.stringify(error.loc) === JSON.stringify(expectedLocation);",
+              "    })).to.eql(true);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "auth": {
+          "type": "noauth"
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/jobs/validate",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "jobs",
+            "validate"
+          ]
+        },
+        "description": "V1a-03 请求体校验。只校验，不保存；422 是本用例预期输入失败，不是服务端故障。",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \" Python 后端工程师 \",\n  \"city\": \" 杭州 \",\n  \"source_url\": \" https://example.com/jobs/body-demo \"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "03 title 为数字",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// 后置断言只核对响应；POST /jobs/validate 不保存任何岗位。",
+              "pm.test(\"状态码符合本用例预期 422\", function () {",
+              "    pm.expect(pm.response.code).to.eql(422);",
+              "});",
+              "pm.test(\"响应是 JSON\", function () {",
+              "    const contentType = pm.response.headers.get(\"Content-Type\") || \"\";",
+              "    pm.expect(contentType.toLowerCase().includes(\"application/json\")).to.eql(true);",
+              "});",
+              "pm.test(\"结构错误 detail 是非空错误列表\", function () {",
+              "    const errors = pm.response.json().detail;",
+              "    pm.expect(Array.isArray(errors)).to.eql(true);",
+              "    pm.expect(errors.length > 0).to.eql(true);",
+              "});",
+              "pm.test(\"错误定位到对应 Body 字段\", function () {",
+              "    const expectedLocation = [\"body\", \"title\"];",
+              "    const errors = pm.response.json().detail;",
+              "    pm.expect(errors.some(function (error) {",
+              "        return JSON.stringify(error.loc) === JSON.stringify(expectedLocation);",
+              "    })).to.eql(true);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "auth": {
+          "type": "noauth"
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/jobs/validate",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "jobs",
+            "validate"
+          ]
+        },
+        "description": "V1a-03 请求体校验。只校验，不保存；422 是本用例预期输入失败，不是服务端故障。",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": 42,\n  \"city\": \" 杭州 \",\n  \"description\": \" 使用 FastAPI 开发岗位服务 \",\n  \"source_url\": \" https://example.com/jobs/body-demo \"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "04 description 只有空格",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// 后置断言只核对响应；POST /jobs/validate 不保存任何岗位。",
+              "pm.test(\"状态码符合本用例预期 422\", function () {",
+              "    pm.expect(pm.response.code).to.eql(422);",
+              "});",
+              "pm.test(\"响应是 JSON\", function () {",
+              "    const contentType = pm.response.headers.get(\"Content-Type\") || \"\";",
+              "    pm.expect(contentType.toLowerCase().includes(\"application/json\")).to.eql(true);",
+              "});",
+              "pm.test(\"业务错误 detail 是说明字符串\", function () {",
+              "    const detail = pm.response.json().detail;",
+              "    pm.expect(typeof detail).to.eql(\"string\");",
+              "    pm.expect(detail.includes(\"description\")).to.eql(true);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "auth": {
+          "type": "noauth"
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/jobs/validate",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "jobs",
+            "validate"
+          ]
+        },
+        "description": "V1a-03 请求体校验。只校验，不保存；422 是本用例预期输入失败，不是服务端故障。",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \" Python 后端工程师 \",\n  \"city\": \" 杭州 \",\n  \"description\": \"   \",\n  \"source_url\": \" https://example.com/jobs/body-demo \"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "05 source_url 为 FTP",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// 后置断言只核对响应；POST /jobs/validate 不保存任何岗位。",
+              "pm.test(\"状态码符合本用例预期 422\", function () {",
+              "    pm.expect(pm.response.code).to.eql(422);",
+              "});",
+              "pm.test(\"响应是 JSON\", function () {",
+              "    const contentType = pm.response.headers.get(\"Content-Type\") || \"\";",
+              "    pm.expect(contentType.toLowerCase().includes(\"application/json\")).to.eql(true);",
+              "});",
+              "pm.test(\"业务错误 detail 是说明字符串\", function () {",
+              "    const detail = pm.response.json().detail;",
+              "    pm.expect(typeof detail).to.eql(\"string\");",
+              "    pm.expect(detail.includes(\"source_url\")).to.eql(true);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "auth": {
+          "type": "noauth"
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/jobs/validate",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "jobs",
+            "validate"
+          ]
+        },
+        "description": "V1a-03 请求体校验。只校验，不保存；422 是本用例预期输入失败，不是服务端故障。",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \" Python 后端工程师 \",\n  \"city\": \" 杭州 \",\n  \"description\": \" 使用 FastAPI 开发岗位服务 \",\n  \"source_url\": \"ftp://example.com/jobs/body-demo\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "06 Body 是数组",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// 后置断言只核对响应；POST /jobs/validate 不保存任何岗位。",
+              "pm.test(\"状态码符合本用例预期 422\", function () {",
+              "    pm.expect(pm.response.code).to.eql(422);",
+              "});",
+              "pm.test(\"响应是 JSON\", function () {",
+              "    const contentType = pm.response.headers.get(\"Content-Type\") || \"\";",
+              "    pm.expect(contentType.toLowerCase().includes(\"application/json\")).to.eql(true);",
+              "});",
+              "pm.test(\"结构错误 detail 是非空错误列表\", function () {",
+              "    const errors = pm.response.json().detail;",
+              "    pm.expect(Array.isArray(errors)).to.eql(true);",
+              "    pm.expect(errors.length > 0).to.eql(true);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "auth": {
+          "type": "noauth"
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/jobs/validate",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "jobs",
+            "validate"
+          ]
+        },
+        "description": "V1a-03 请求体校验。只校验，不保存；422 是本用例预期输入失败，不是服务端故障。",
+        "body": {
+          "mode": "raw",
+          "raw": "[\n  {\n    \"title\": \" Python 后端工程师 \",\n    \"city\": \" 杭州 \",\n    \"description\": \" 使用 FastAPI 开发岗位服务 \",\n    \"source_url\": \" https://example.com/jobs/body-demo \"\n  }\n]",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "07 JSON 语法损坏",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// 后置断言只核对响应；POST /jobs/validate 不保存任何岗位。",
+              "pm.test(\"状态码符合本用例预期 422\", function () {",
+              "    pm.expect(pm.response.code).to.eql(422);",
+              "});",
+              "pm.test(\"响应是 JSON\", function () {",
+              "    const contentType = pm.response.headers.get(\"Content-Type\") || \"\";",
+              "    pm.expect(contentType.toLowerCase().includes(\"application/json\")).to.eql(true);",
+              "});",
+              "pm.test(\"结构错误 detail 是非空错误列表\", function () {",
+              "    const errors = pm.response.json().detail;",
+              "    pm.expect(Array.isArray(errors)).to.eql(true);",
+              "    pm.expect(errors.length > 0).to.eql(true);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "auth": {
+          "type": "noauth"
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/jobs/validate",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "jobs",
+            "validate"
+          ]
+        },
+        "description": "V1a-03 请求体校验。只校验，不保存；422 是本用例预期输入失败，不是服务端故障。",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "08 不发送 Body",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// 后置断言只核对响应；POST /jobs/validate 不保存任何岗位。",
+              "pm.test(\"状态码符合本用例预期 422\", function () {",
+              "    pm.expect(pm.response.code).to.eql(422);",
+              "});",
+              "pm.test(\"响应是 JSON\", function () {",
+              "    const contentType = pm.response.headers.get(\"Content-Type\") || \"\";",
+              "    pm.expect(contentType.toLowerCase().includes(\"application/json\")).to.eql(true);",
+              "});",
+              "pm.test(\"结构错误 detail 是非空错误列表\", function () {",
+              "    const errors = pm.response.json().detail;",
+              "    pm.expect(Array.isArray(errors)).to.eql(true);",
+              "    pm.expect(errors.length > 0).to.eql(true);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "auth": {
+          "type": "noauth"
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/jobs/validate",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "jobs",
+            "validate"
+          ]
+        },
+        "description": "V1a-03 请求体校验。只校验，不保存；422 是本用例预期输入失败，不是服务端故障。"
+      },
+      "response": []
+    },
+    {
+      "name": "09 额外字段被忽略",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// 后置断言只核对响应；POST /jobs/validate 不保存任何岗位。",
+              "pm.test(\"状态码符合本用例预期 200\", function () {",
+              "    pm.expect(pm.response.code).to.eql(200);",
+              "});",
+              "pm.test(\"响应是 JSON\", function () {",
+              "    const contentType = pm.response.headers.get(\"Content-Type\") || \"\";",
+              "    pm.expect(contentType.toLowerCase().includes(\"application/json\")).to.eql(true);",
+              "});",
+              "pm.test(\"返回清洗后的四字段对象\", function () {",
+              "    // 完整对象比较也能发现错误保留额外字段或返回列表结构。",
+              "    pm.expect(pm.response.json()).to.eql({\"title\":\"Python 后端工程师\",\"city\":\"杭州\",\"description\":\"使用 FastAPI 开发岗位服务\",\"source_url\":\"https://example.com/jobs/body-demo\"});",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "auth": {
+          "type": "noauth"
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/jobs/validate",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "jobs",
+            "validate"
+          ]
+        },
+        "description": "V1a-03 请求体校验。只校验，不保存；422 是本用例预期输入失败，不是服务端故障。",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \" Python 后端工程师 \",\n  \"city\": \" 杭州 \",\n  \"description\": \" 使用 FastAPI 开发岗位服务 \",\n  \"source_url\": \" https://example.com/jobs/body-demo \",\n  \"company\": \"合成演示字段\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    }
+  ]
+}

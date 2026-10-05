@@ -9,5 +9,60 @@
       "description": "负责模型服务、限流和可观测性建设",
       "source_url": "https://example.com/jobs/6"
     }
+  },
+  {
+    "index": 85,
+    "duplicate_of": 13,
+    "source_url": "https://example.com/jobs/synthetic-24",
+    "data": {
+      "title": "AI 应用后端工程师（实习）",
+      "city": "杭州",
+      "description": "[合成演示 JD] 场景：企业知识库。职责：负责大模型应用接口、会话管理与业务系统集成。技能要求：Python、FastAPI、HTTP、SQL。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+      "source_url": "https://example.com/jobs/synthetic-24"
+    }
+  },
+  {
+    "index": 86,
+    "duplicate_of": 24,
+    "source_url": "https://example.com/jobs/synthetic-35",
+    "data": {
+      "title": "AI 数据质量工程师（实习）",
+      "city": "西安",
+      "description": "[合成演示 JD] 场景：企业知识库。职责：负责标注一致性、字段校验与数据审计。技能要求：Python、SQL、数据清洗、质量评估。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+      "source_url": "https://example.com/jobs/synthetic-35"
+    }
+  },
+  {
+    "index": 87,
+    "duplicate_of": 37,
+    "source_url": "https://example.com/jobs/synthetic-48",
+    "data": {
+      "title": "Python 测试开发工程师",
+      "city": "深圳",
+      "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责接口测试、错误路径验证与回归自动化。技能要求：Python、pytest、API、SQL。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+      "source_url": "https://example.com/jobs/synthetic-48"
+    }
+  },
+  {
+    "index": 88,
+    "duplicate_of": 55,
+    "source_url": "https://example.com/jobs/synthetic-66",
+    "data": {
+      "title": "Python 测试开发工程师",
+      "city": "杭州",
+      "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责接口测试、错误路径验证与回归自动化。技能要求：Python、pytest、API、SQL。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+      "source_url": "https://example.com/jobs/synthetic-66"
+    }
+  },
+  {
+    "index": 89,
+    "duplicate_of": 84,
+    "source_url": "https://example.com/jobs/synthetic-95",
+    "data": {
+      "title": "AI 平台运维开发工程师",
+      "city": "深圳",
+      "description": "[合成演示 JD] 场景：文档理解平台。职责：负责服务日志、部署脚本与故障排查。技能要求：Python、Linux、Docker、监控。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+      "source_url": "https://example.com/jobs/synthetic-95"
+    }
   }
 ]

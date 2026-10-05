@@ -70,5 +70,467 @@
     "city": "深圳",
     "description": "负责模型服务部署、监控和故障排查",
     "source_url": "https://example.com/jobs/12"
+  },
+  {
+    "title": "AI 应用后端工程师（实习）",
+    "city": "杭州",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责大模型应用接口、会话管理与业务系统集成。技能要求：Python、FastAPI、HTTP、SQL。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-24"
+  },
+  {
+    "title": "Python 后端开发工程师（实习）",
+    "city": "西安",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责服务端接口、权限校验与数据查询。技能要求：Python、PostgreSQL、Git、pytest。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-25"
+  },
+  {
+    "title": "RAG 应用工程师（实习）",
+    "city": "南京",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责知识库切片、向量检索与带来源的问答。技能要求：Python、RAG、向量检索、检索评测。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-26"
+  },
+  {
+    "title": "机器学习工程师（实习）",
+    "city": "深圳",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责特征处理、模型训练与验证集评估。技能要求：Python、概率统计、scikit-learn、模型训练。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-27"
+  },
+  {
+    "title": "MLOps 工程师（实习）",
+    "city": "合肥",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责模型部署、版本管理与推理服务监控。技能要求：Python、Docker、Linux、模型部署。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-28"
+  },
+  {
+    "title": "AI Agent 开发工程师（实习）",
+    "city": "杭州",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责工具调用、任务状态与人工确认流程。技能要求：Python、LLM、HTTP、自动化测试。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-29"
+  },
+  {
+    "title": "Python 测试开发工程师（实习）",
+    "city": "西安",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责接口测试、错误路径验证与回归自动化。技能要求：Python、pytest、API、SQL。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-30"
+  },
+  {
+    "title": "数据开发工程师（实习）",
+    "city": "南京",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责岗位数据清洗、任务调度与质量核对。技能要求：Python、SQL、数据清洗、Linux。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-31"
+  },
+  {
+    "title": "智能搜索工程师（实习）",
+    "city": "深圳",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责关键词检索、向量召回与排序效果分析。技能要求：Python、关键词检索、向量检索、搜索评测。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-32"
+  },
+  {
+    "title": "NLP 应用工程师（实习）",
+    "city": "合肥",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责文本分类、信息抽取与样本标注规范。技能要求：Python、NLP、PyTorch、信息抽取。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-33"
+  },
+  {
+    "title": "LLM 平台开发工程师（实习）",
+    "city": "杭州",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责模型服务接入、调用限流与可观测性。技能要求：Python、LLM、API、监控。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-34"
+  },
+  {
+    "title": "AI 数据质量工程师（实习）",
+    "city": "西安",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责标注一致性、字段校验与数据审计。技能要求：Python、SQL、数据清洗、质量评估。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-35"
+  },
+  {
+    "title": "模型推理服务工程师（实习）",
+    "city": "南京",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责推理接口、批处理与延迟分析。技能要求：Python、FastAPI、模型部署、Linux。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-36"
+  },
+  {
+    "title": "AI 解决方案工程师（实习）",
+    "city": "深圳",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责需求拆解、应用演示与集成方案验证。技能要求：Python、HTTP、RAG、技术文档。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-37"
+  },
+  {
+    "title": "FastAPI 服务端工程师（实习）",
+    "city": "合肥",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责类型化接口、异常处理与自动化测试。技能要求：Python、FastAPI、SQL、pytest。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-38"
+  },
+  {
+    "title": "数据平台后端工程师（实习）",
+    "city": "杭州",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责数据查询、事务处理与平台接口。技能要求：Python、PostgreSQL、SQL、Git。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-39"
+  },
+  {
+    "title": "大模型评测工程师（实习）",
+    "city": "西安",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责固定测试集、质量指标与失败案例复盘。技能要求：Python、LLM、评测、自动化。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-40"
+  },
+  {
+    "title": "AI 平台运维开发工程师（实习）",
+    "city": "南京",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责服务日志、部署脚本与故障排查。技能要求：Python、Linux、Docker、监控。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-41"
+  },
+  {
+    "title": "AI 应用后端工程师",
+    "city": "南京",
+    "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责大模型应用接口、会话管理与业务系统集成。技能要求：Python、FastAPI、HTTP、SQL。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+    "source_url": "https://example.com/jobs/synthetic-42"
+  },
+  {
+    "title": "Python 后端开发工程师",
+    "city": "深圳",
+    "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责服务端接口、权限校验与数据查询。技能要求：Python、PostgreSQL、Git、pytest。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+    "source_url": "https://example.com/jobs/synthetic-43"
+  },
+  {
+    "title": "RAG 应用工程师",
+    "city": "合肥",
+    "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责知识库切片、向量检索与带来源的问答。技能要求：Python、RAG、向量检索、检索评测。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+    "source_url": "https://example.com/jobs/synthetic-44"
+  },
+  {
+    "title": "机器学习工程师",
+    "city": "杭州",
+    "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责特征处理、模型训练与验证集评估。技能要求：Python、概率统计、scikit-learn、模型训练。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+    "source_url": "https://example.com/jobs/synthetic-45"
+  },
+  {
+    "title": "MLOps 工程师",
+    "city": "西安",
+    "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责模型部署、版本管理与推理服务监控。技能要求：Python、Docker、Linux、模型部署。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+    "source_url": "https://example.com/jobs/synthetic-46"
+  },
+  {
+    "title": "AI Agent 开发工程师",
+    "city": "南京",
+    "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责工具调用、任务状态与人工确认流程。技能要求：Python、LLM、HTTP、自动化测试。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+    "source_url": "https://example.com/jobs/synthetic-47"
+  },
+  {
+    "title": "Python 测试开发工程师",
+    "city": "深圳",
+    "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责接口测试、错误路径验证与回归自动化。技能要求：Python、pytest、API、SQL。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+    "source_url": "https://example.com/jobs/synthetic-48"
+  },
+  {
+    "title": "数据开发工程师",
+    "city": "合肥",
+    "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责岗位数据清洗、任务调度与质量核对。技能要求：Python、SQL、数据清洗、Linux。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+    "source_url": "https://example.com/jobs/synthetic-49"
+  },
+  {
+    "title": "智能搜索工程师",
+    "city": "杭州",
+    "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责关键词检索、向量召回与排序效果分析。技能要求：Python、关键词检索、向量检索、搜索评测。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+    "source_url": "https://example.com/jobs/synthetic-50"
+  },
+  {
+    "title": "NLP 应用工程师",
+    "city": "西安",
+    "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责文本分类、信息抽取与样本标注规范。技能要求：Python、NLP、PyTorch、信息抽取。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+    "source_url": "https://example.com/jobs/synthetic-51"
+  },
+  {
+    "title": "LLM 平台开发工程师",
+    "city": "南京",
+    "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责模型服务接入、调用限流与可观测性。技能要求：Python、LLM、API、监控。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+    "source_url": "https://example.com/jobs/synthetic-52"
+  },
+  {
+    "title": "AI 数据质量工程师",
+    "city": "深圳",
+    "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责标注一致性、字段校验与数据审计。技能要求：Python、SQL、数据清洗、质量评估。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+    "source_url": "https://example.com/jobs/synthetic-53"
+  },
+  {
+    "title": "模型推理服务工程师",
+    "city": "合肥",
+    "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责推理接口、批处理与延迟分析。技能要求：Python、FastAPI、模型部署、Linux。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+    "source_url": "https://example.com/jobs/synthetic-54"
+  },
+  {
+    "title": "AI 解决方案工程师",
+    "city": "杭州",
+    "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责需求拆解、应用演示与集成方案验证。技能要求：Python、HTTP、RAG、技术文档。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+    "source_url": "https://example.com/jobs/synthetic-55"
+  },
+  {
+    "title": "FastAPI 服务端工程师",
+    "city": "西安",
+    "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责类型化接口、异常处理与自动化测试。技能要求：Python、FastAPI、SQL、pytest。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+    "source_url": "https://example.com/jobs/synthetic-56"
+  },
+  {
+    "title": "数据平台后端工程师",
+    "city": "南京",
+    "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责数据查询、事务处理与平台接口。技能要求：Python、PostgreSQL、SQL、Git。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+    "source_url": "https://example.com/jobs/synthetic-57"
+  },
+  {
+    "title": "大模型评测工程师",
+    "city": "深圳",
+    "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责固定测试集、质量指标与失败案例复盘。技能要求：Python、LLM、评测、自动化。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+    "source_url": "https://example.com/jobs/synthetic-58"
+  },
+  {
+    "title": "AI 平台运维开发工程师",
+    "city": "合肥",
+    "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责服务日志、部署脚本与故障排查。技能要求：Python、Linux、Docker、监控。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+    "source_url": "https://example.com/jobs/synthetic-59"
+  },
+  {
+    "title": "AI 应用后端工程师",
+    "city": "合肥",
+    "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责大模型应用接口、会话管理与业务系统集成。技能要求：Python、FastAPI、HTTP、SQL。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+    "source_url": "https://example.com/jobs/synthetic-60"
+  },
+  {
+    "title": "Python 后端开发工程师",
+    "city": "杭州",
+    "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责服务端接口、权限校验与数据查询。技能要求：Python、PostgreSQL、Git、pytest。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+    "source_url": "https://example.com/jobs/synthetic-61"
+  },
+  {
+    "title": "RAG 应用工程师",
+    "city": "西安",
+    "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责知识库切片、向量检索与带来源的问答。技能要求：Python、RAG、向量检索、检索评测。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+    "source_url": "https://example.com/jobs/synthetic-62"
+  },
+  {
+    "title": "机器学习工程师",
+    "city": "南京",
+    "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责特征处理、模型训练与验证集评估。技能要求：Python、概率统计、scikit-learn、模型训练。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+    "source_url": "https://example.com/jobs/synthetic-63"
+  },
+  {
+    "title": "MLOps 工程师",
+    "city": "深圳",
+    "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责模型部署、版本管理与推理服务监控。技能要求：Python、Docker、Linux、模型部署。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+    "source_url": "https://example.com/jobs/synthetic-64"
+  },
+  {
+    "title": "AI Agent 开发工程师",
+    "city": "合肥",
+    "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责工具调用、任务状态与人工确认流程。技能要求：Python、LLM、HTTP、自动化测试。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+    "source_url": "https://example.com/jobs/synthetic-65"
+  },
+  {
+    "title": "Python 测试开发工程师",
+    "city": "杭州",
+    "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责接口测试、错误路径验证与回归自动化。技能要求：Python、pytest、API、SQL。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+    "source_url": "https://example.com/jobs/synthetic-66"
+  },
+  {
+    "title": "数据开发工程师",
+    "city": "西安",
+    "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责岗位数据清洗、任务调度与质量核对。技能要求：Python、SQL、数据清洗、Linux。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+    "source_url": "https://example.com/jobs/synthetic-67"
+  },
+  {
+    "title": "智能搜索工程师",
+    "city": "南京",
+    "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责关键词检索、向量召回与排序效果分析。技能要求：Python、关键词检索、向量检索、搜索评测。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+    "source_url": "https://example.com/jobs/synthetic-68"
+  },
+  {
+    "title": "NLP 应用工程师",
+    "city": "深圳",
+    "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责文本分类、信息抽取与样本标注规范。技能要求：Python、NLP、PyTorch、信息抽取。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+    "source_url": "https://example.com/jobs/synthetic-69"
+  },
+  {
+    "title": "LLM 平台开发工程师",
+    "city": "合肥",
+    "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责模型服务接入、调用限流与可观测性。技能要求：Python、LLM、API、监控。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+    "source_url": "https://example.com/jobs/synthetic-70"
+  },
+  {
+    "title": "AI 数据质量工程师",
+    "city": "杭州",
+    "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责标注一致性、字段校验与数据审计。技能要求：Python、SQL、数据清洗、质量评估。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+    "source_url": "https://example.com/jobs/synthetic-71"
+  },
+  {
+    "title": "模型推理服务工程师",
+    "city": "西安",
+    "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责推理接口、批处理与延迟分析。技能要求：Python、FastAPI、模型部署、Linux。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+    "source_url": "https://example.com/jobs/synthetic-72"
+  },
+  {
+    "title": "AI 解决方案工程师",
+    "city": "南京",
+    "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责需求拆解、应用演示与集成方案验证。技能要求：Python、HTTP、RAG、技术文档。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+    "source_url": "https://example.com/jobs/synthetic-73"
+  },
+  {
+    "title": "FastAPI 服务端工程师",
+    "city": "深圳",
+    "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责类型化接口、异常处理与自动化测试。技能要求：Python、FastAPI、SQL、pytest。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+    "source_url": "https://example.com/jobs/synthetic-74"
+  },
+  {
+    "title": "数据平台后端工程师",
+    "city": "合肥",
+    "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责数据查询、事务处理与平台接口。技能要求：Python、PostgreSQL、SQL、Git。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+    "source_url": "https://example.com/jobs/synthetic-75"
+  },
+  {
+    "title": "大模型评测工程师",
+    "city": "杭州",
+    "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责固定测试集、质量指标与失败案例复盘。技能要求：Python、LLM、评测、自动化。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+    "source_url": "https://example.com/jobs/synthetic-76"
+  },
+  {
+    "title": "AI 平台运维开发工程师",
+    "city": "西安",
+    "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责服务日志、部署脚本与故障排查。技能要求：Python、Linux、Docker、监控。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+    "source_url": "https://example.com/jobs/synthetic-77"
+  },
+  {
+    "title": "AI 应用后端工程师",
+    "city": "西安",
+    "description": "[合成演示 JD] 场景：文档理解平台。职责：负责大模型应用接口、会话管理与业务系统集成。技能要求：Python、FastAPI、HTTP、SQL。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+    "source_url": "https://example.com/jobs/synthetic-78"
+  },
+  {
+    "title": "Python 后端开发工程师",
+    "city": "南京",
+    "description": "[合成演示 JD] 场景：文档理解平台。职责：负责服务端接口、权限校验与数据查询。技能要求：Python、PostgreSQL、Git、pytest。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+    "source_url": "https://example.com/jobs/synthetic-79"
+  },
+  {
+    "title": "RAG 应用工程师",
+    "city": "深圳",
+    "description": "[合成演示 JD] 场景：文档理解平台。职责：负责知识库切片、向量检索与带来源的问答。技能要求：Python、RAG、向量检索、检索评测。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+    "source_url": "https://example.com/jobs/synthetic-80"
+  },
+  {
+    "title": "机器学习工程师",
+    "city": "合肥",
+    "description": "[合成演示 JD] 场景：文档理解平台。职责：负责特征处理、模型训练与验证集评估。技能要求：Python、概率统计、scikit-learn、模型训练。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+    "source_url": "https://example.com/jobs/synthetic-81"
+  },
+  {
+    "title": "MLOps 工程师",
+    "city": "杭州",
+    "description": "[合成演示 JD] 场景：文档理解平台。职责：负责模型部署、版本管理与推理服务监控。技能要求：Python、Docker、Linux、模型部署。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+    "source_url": "https://example.com/jobs/synthetic-82"
+  },
+  {
+    "title": "AI Agent 开发工程师",
+    "city": "西安",
+    "description": "[合成演示 JD] 场景：文档理解平台。职责：负责工具调用、任务状态与人工确认流程。技能要求：Python、LLM、HTTP、自动化测试。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+    "source_url": "https://example.com/jobs/synthetic-83"
+  },
+  {
+    "title": "Python 测试开发工程师",
+    "city": "南京",
+    "description": "[合成演示 JD] 场景：文档理解平台。职责：负责接口测试、错误路径验证与回归自动化。技能要求：Python、pytest、API、SQL。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+    "source_url": "https://example.com/jobs/synthetic-84"
+  },
+  {
+    "title": "数据开发工程师",
+    "city": "深圳",
+    "description": "[合成演示 JD] 场景：文档理解平台。职责：负责岗位数据清洗、任务调度与质量核对。技能要求：Python、SQL、数据清洗、Linux。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+    "source_url": "https://example.com/jobs/synthetic-85"
+  },
+  {
+    "title": "智能搜索工程师",
+    "city": "合肥",
+    "description": "[合成演示 JD] 场景：文档理解平台。职责：负责关键词检索、向量召回与排序效果分析。技能要求：Python、关键词检索、向量检索、搜索评测。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+    "source_url": "https://example.com/jobs/synthetic-86"
+  },
+  {
+    "title": "NLP 应用工程师",
+    "city": "杭州",
+    "description": "[合成演示 JD] 场景：文档理解平台。职责：负责文本分类、信息抽取与样本标注规范。技能要求：Python、NLP、PyTorch、信息抽取。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+    "source_url": "https://example.com/jobs/synthetic-87"
+  },
+  {
+    "title": "LLM 平台开发工程师",
+    "city": "西安",
+    "description": "[合成演示 JD] 场景：文档理解平台。职责：负责模型服务接入、调用限流与可观测性。技能要求：Python、LLM、API、监控。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+    "source_url": "https://example.com/jobs/synthetic-88"
+  },
+  {
+    "title": "AI 数据质量工程师",
+    "city": "南京",
+    "description": "[合成演示 JD] 场景：文档理解平台。职责：负责标注一致性、字段校验与数据审计。技能要求：Python、SQL、数据清洗、质量评估。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+    "source_url": "https://example.com/jobs/synthetic-89"
+  },
+  {
+    "title": "模型推理服务工程师",
+    "city": "深圳",
+    "description": "[合成演示 JD] 场景：文档理解平台。职责：负责推理接口、批处理与延迟分析。技能要求：Python、FastAPI、模型部署、Linux。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+    "source_url": "https://example.com/jobs/synthetic-90"
+  },
+  {
+    "title": "AI 解决方案工程师",
+    "city": "合肥",
+    "description": "[合成演示 JD] 场景：文档理解平台。职责：负责需求拆解、应用演示与集成方案验证。技能要求：Python、HTTP、RAG、技术文档。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+    "source_url": "https://example.com/jobs/synthetic-91"
+  },
+  {
+    "title": "FastAPI 服务端工程师",
+    "city": "杭州",
+    "description": "[合成演示 JD] 场景：文档理解平台。职责：负责类型化接口、异常处理与自动化测试。技能要求：Python、FastAPI、SQL、pytest。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+    "source_url": "https://example.com/jobs/synthetic-92"
+  },
+  {
+    "title": "数据平台后端工程师",
+    "city": "西安",
+    "description": "[合成演示 JD] 场景：文档理解平台。职责：负责数据查询、事务处理与平台接口。技能要求：Python、PostgreSQL、SQL、Git。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+    "source_url": "https://example.com/jobs/synthetic-93"
+  },
+  {
+    "title": "大模型评测工程师",
+    "city": "南京",
+    "description": "[合成演示 JD] 场景：文档理解平台。职责：负责固定测试集、质量指标与失败案例复盘。技能要求：Python、LLM、评测、自动化。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+    "source_url": "https://example.com/jobs/synthetic-94"
+  },
+  {
+    "title": "AI 平台运维开发工程师",
+    "city": "深圳",
+    "description": "[合成演示 JD] 场景：文档理解平台。职责：负责服务日志、部署脚本与故障排查。技能要求：Python、Linux、Docker、监控。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+    "source_url": "https://example.com/jobs/synthetic-95"
+  },
+  {
+    "title": "AI 应用后端工程师（实习）",
+    "city": "杭州",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责大模型应用接口、会话管理与业务系统集成。技能要求：Python、FastAPI、HTTP、SQL。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-24"
+  },
+  {
+    "title": "AI 数据质量工程师（实习）",
+    "city": "西安",
+    "description": "[合成演示 JD] 场景：企业知识库。职责：负责标注一致性、字段校验与数据审计。技能要求：Python、SQL、数据清洗、质量评估。工程要求：能阅读已有模块并完成简单功能，重视可追溯的数据来源。",
+    "source_url": "https://example.com/jobs/synthetic-35"
+  },
+  {
+    "title": "Python 测试开发工程师",
+    "city": "深圳",
+    "description": "[合成演示 JD] 场景：招聘情报分析。职责：负责接口测试、错误路径验证与回归自动化。技能要求：Python、pytest、API、SQL。工程要求：能解释数据流和设计取舍，使用 Git 管理变更并编写边界测试。",
+    "source_url": "https://example.com/jobs/synthetic-48"
+  },
+  {
+    "title": "Python 测试开发工程师",
+    "city": "杭州",
+    "description": "[合成演示 JD] 场景：智能客服辅助。职责：负责接口测试、错误路径验证与回归自动化。技能要求：Python、pytest、API、SQL。工程要求：关注接口可靠性、请求超时与失败日志，能够根据测试结果定位问题。",
+    "source_url": "https://example.com/jobs/synthetic-66"
+  },
+  {
+    "title": "AI 平台运维开发工程师",
+    "city": "深圳",
+    "description": "[合成演示 JD] 场景：文档理解平台。职责：负责服务日志、部署脚本与故障排查。技能要求：Python、Linux、Docker、监控。工程要求：需要记录质量与性能指标，结合人工核对分析误差，并维护可复现运行说明。",
+    "source_url": "https://example.com/jobs/synthetic-95"
   }
 ]

@@ -1,0 +1,542 @@
+{
+  "info": {
+    "name": "CareerLens 查询参数练习",
+    "description": "六个 GET /jobs 调试请求：city、keyword、AND、无匹配与空白。导入到单独目录，保持已有请求；若同路径被合并为用例，请在用例中核对 Params 与脚本。不修改数据，不包含认证信息。",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "noauth"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 仅按城市筛选",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// 这段脚本放在后置操作：检查真实响应，不修改服务端数据。",
+              "pm.test(\"岗位列表返回 200\", function () {",
+              "    pm.expect(pm.response.code).to.eql(200);",
+              "});",
+              "pm.test(\"响应类型是 JSON\", function () {",
+              "    const contentType = pm.response.headers.get(\"Content-Type\") || \"\";",
+              "    pm.expect(contentType.toLowerCase().includes(\"application/json\")).to.eql(true);",
+              "});",
+              "pm.test(\"响应包含合法的 total 和 items\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(data !== null && typeof data === \"object\" && !Array.isArray(data)).to.eql(true);",
+              "    pm.expect(Number.isInteger(data.total) && data.total >= 0).to.eql(true);",
+              "    pm.expect(Array.isArray(data.items)).to.eql(true);",
+              "});",
+              "pm.test(\"total 与岗位数组长度一致\", function () {",
+              "    const data = pm.response.json();",
+              "    // 不固定为 11：合法的数据变化不应让契约测试失败。",
+              "    pm.expect(data.total).to.eql(data.items.length);",
+              "});",
+              "pm.test(\"岗位字段完整且符合基本规则\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(Array.isArray(data.items)).to.eql(true);",
+              "    data.items.forEach(function (job) {",
+              "        pm.expect(job !== null && typeof job === \"object\" && !Array.isArray(job)).to.eql(true);",
+              "        [\"title\", \"city\", \"description\", \"source_url\"].forEach(function (field) {",
+              "            pm.expect(typeof job[field]).to.eql(\"string\");",
+              "            pm.expect(job[field].trim().length > 0).to.eql(true);",
+              "            pm.expect(job[field]).to.eql(job[field].trim());",
+              "        });",
+              "        pm.expect(/^https?:\\/\\/[^\\s/]+(?:[/?#][^\\s]*)?$/i.test(job.source_url)).to.eql(true);",
+              "    });",
+              "    // 空数组也是合法结果；逐条检查在此时没有要遍历的元素。",
+              "});",
+              "",
+              "// 精确核对返回的城市，而不只检查数量。",
+              "pm.test(\"每条岗位都符合城市条件\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(data.items.length > 0).to.eql(true);",
+              "    data.items.forEach(function (job) {",
+              "        pm.expect(job.city.trim().toLowerCase()).to.eql(\"杭州\");",
+              "    });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/jobs?city=%E6%9D%AD%E5%B7%9E",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "jobs"
+          ],
+          "query": [
+            {
+              "key": "city",
+              "value": "杭州"
+            }
+          ]
+        },
+        "description": "V1a-02 可选查询参数用例。无请求体，保持只读；不固定具体岗位数量。"
+      },
+      "response": []
+    },
+    {
+      "name": "02 仅按关键词搜索",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// 这段脚本放在后置操作：检查真实响应，不修改服务端数据。",
+              "pm.test(\"岗位列表返回 200\", function () {",
+              "    pm.expect(pm.response.code).to.eql(200);",
+              "});",
+              "pm.test(\"响应类型是 JSON\", function () {",
+              "    const contentType = pm.response.headers.get(\"Content-Type\") || \"\";",
+              "    pm.expect(contentType.toLowerCase().includes(\"application/json\")).to.eql(true);",
+              "});",
+              "pm.test(\"响应包含合法的 total 和 items\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(data !== null && typeof data === \"object\" && !Array.isArray(data)).to.eql(true);",
+              "    pm.expect(Number.isInteger(data.total) && data.total >= 0).to.eql(true);",
+              "    pm.expect(Array.isArray(data.items)).to.eql(true);",
+              "});",
+              "pm.test(\"total 与岗位数组长度一致\", function () {",
+              "    const data = pm.response.json();",
+              "    // 不固定为 11：合法的数据变化不应让契约测试失败。",
+              "    pm.expect(data.total).to.eql(data.items.length);",
+              "});",
+              "pm.test(\"岗位字段完整且符合基本规则\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(Array.isArray(data.items)).to.eql(true);",
+              "    data.items.forEach(function (job) {",
+              "        pm.expect(job !== null && typeof job === \"object\" && !Array.isArray(job)).to.eql(true);",
+              "        [\"title\", \"city\", \"description\", \"source_url\"].forEach(function (field) {",
+              "            pm.expect(typeof job[field]).to.eql(\"string\");",
+              "            pm.expect(job[field].trim().length > 0).to.eql(true);",
+              "            pm.expect(job[field]).to.eql(job[field].trim());",
+              "        });",
+              "        pm.expect(/^https?:\\/\\/[^\\s/]+(?:[/?#][^\\s]*)?$/i.test(job.source_url)).to.eql(true);",
+              "    });",
+              "    // 空数组也是合法结果；逐条检查在此时没有要遍历的元素。",
+              "});",
+              "",
+              "// 关键词可匹配名称、城市或描述，不要求只出现在标题里。",
+              "pm.test(\"每条岗位都匹配关键词\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(data.items.length > 0).to.eql(true);",
+              "    data.items.forEach(function (job) {",
+              "        const text = [job.title, job.city, job.description].join(\" \").toLowerCase();",
+              "        pm.expect(text.includes(\"fastapi\")).to.eql(true);",
+              "    });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/jobs?keyword=FASTAPI",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "jobs"
+          ],
+          "query": [
+            {
+              "key": "keyword",
+              "value": "FASTAPI"
+            }
+          ]
+        },
+        "description": "V1a-02 可选查询参数用例。无请求体，保持只读；不固定具体岗位数量。"
+      },
+      "response": []
+    },
+    {
+      "name": "03 城市与关键词 AND",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// 这段脚本放在后置操作：检查真实响应，不修改服务端数据。",
+              "pm.test(\"岗位列表返回 200\", function () {",
+              "    pm.expect(pm.response.code).to.eql(200);",
+              "});",
+              "pm.test(\"响应类型是 JSON\", function () {",
+              "    const contentType = pm.response.headers.get(\"Content-Type\") || \"\";",
+              "    pm.expect(contentType.toLowerCase().includes(\"application/json\")).to.eql(true);",
+              "});",
+              "pm.test(\"响应包含合法的 total 和 items\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(data !== null && typeof data === \"object\" && !Array.isArray(data)).to.eql(true);",
+              "    pm.expect(Number.isInteger(data.total) && data.total >= 0).to.eql(true);",
+              "    pm.expect(Array.isArray(data.items)).to.eql(true);",
+              "});",
+              "pm.test(\"total 与岗位数组长度一致\", function () {",
+              "    const data = pm.response.json();",
+              "    // 不固定为 11：合法的数据变化不应让契约测试失败。",
+              "    pm.expect(data.total).to.eql(data.items.length);",
+              "});",
+              "pm.test(\"岗位字段完整且符合基本规则\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(Array.isArray(data.items)).to.eql(true);",
+              "    data.items.forEach(function (job) {",
+              "        pm.expect(job !== null && typeof job === \"object\" && !Array.isArray(job)).to.eql(true);",
+              "        [\"title\", \"city\", \"description\", \"source_url\"].forEach(function (field) {",
+              "            pm.expect(typeof job[field]).to.eql(\"string\");",
+              "            pm.expect(job[field].trim().length > 0).to.eql(true);",
+              "            pm.expect(job[field]).to.eql(job[field].trim());",
+              "        });",
+              "        pm.expect(/^https?:\\/\\/[^\\s/]+(?:[/?#][^\\s]*)?$/i.test(job.source_url)).to.eql(true);",
+              "    });",
+              "    // 空数组也是合法结果；逐条检查在此时没有要遍历的元素。",
+              "});",
+              "",
+              "// 精确核对返回的城市，而不只检查数量。",
+              "pm.test(\"每条岗位都符合城市条件\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(data.items.length > 0).to.eql(true);",
+              "    data.items.forEach(function (job) {",
+              "        pm.expect(job.city.trim().toLowerCase()).to.eql(\"杭州\");",
+              "    });",
+              "});",
+              "// 关键词可匹配名称、城市或描述，不要求只出现在标题里。",
+              "pm.test(\"每条岗位都匹配关键词\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(data.items.length > 0).to.eql(true);",
+              "    data.items.forEach(function (job) {",
+              "        const text = [job.title, job.city, job.description].join(\" \").toLowerCase();",
+              "        pm.expect(text.includes(\"fastapi\")).to.eql(true);",
+              "    });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/jobs?city=%E6%9D%AD%E5%B7%9E&keyword=FastAPI",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "jobs"
+          ],
+          "query": [
+            {
+              "key": "city",
+              "value": "杭州"
+            },
+            {
+              "key": "keyword",
+              "value": "FastAPI"
+            }
+          ]
+        },
+        "description": "V1a-02 可选查询参数用例。无请求体，保持只读；不固定具体岗位数量。"
+      },
+      "response": []
+    },
+    {
+      "name": "04 西安 Python 岗位",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// 这段脚本放在后置操作：检查真实响应，不修改服务端数据。",
+              "pm.test(\"岗位列表返回 200\", function () {",
+              "    pm.expect(pm.response.code).to.eql(200);",
+              "});",
+              "pm.test(\"响应类型是 JSON\", function () {",
+              "    const contentType = pm.response.headers.get(\"Content-Type\") || \"\";",
+              "    pm.expect(contentType.toLowerCase().includes(\"application/json\")).to.eql(true);",
+              "});",
+              "pm.test(\"响应包含合法的 total 和 items\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(data !== null && typeof data === \"object\" && !Array.isArray(data)).to.eql(true);",
+              "    pm.expect(Number.isInteger(data.total) && data.total >= 0).to.eql(true);",
+              "    pm.expect(Array.isArray(data.items)).to.eql(true);",
+              "});",
+              "pm.test(\"total 与岗位数组长度一致\", function () {",
+              "    const data = pm.response.json();",
+              "    // 不固定为 11：合法的数据变化不应让契约测试失败。",
+              "    pm.expect(data.total).to.eql(data.items.length);",
+              "});",
+              "pm.test(\"岗位字段完整且符合基本规则\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(Array.isArray(data.items)).to.eql(true);",
+              "    data.items.forEach(function (job) {",
+              "        pm.expect(job !== null && typeof job === \"object\" && !Array.isArray(job)).to.eql(true);",
+              "        [\"title\", \"city\", \"description\", \"source_url\"].forEach(function (field) {",
+              "            pm.expect(typeof job[field]).to.eql(\"string\");",
+              "            pm.expect(job[field].trim().length > 0).to.eql(true);",
+              "            pm.expect(job[field]).to.eql(job[field].trim());",
+              "        });",
+              "        pm.expect(/^https?:\\/\\/[^\\s/]+(?:[/?#][^\\s]*)?$/i.test(job.source_url)).to.eql(true);",
+              "    });",
+              "    // 空数组也是合法结果；逐条检查在此时没有要遍历的元素。",
+              "});",
+              "",
+              "// 精确核对返回的城市，而不只检查数量。",
+              "pm.test(\"每条岗位都符合城市条件\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(data.items.length > 0).to.eql(true);",
+              "    data.items.forEach(function (job) {",
+              "        pm.expect(job.city.trim().toLowerCase()).to.eql(\"西安\");",
+              "    });",
+              "});",
+              "// 关键词可匹配名称、城市或描述，不要求只出现在标题里。",
+              "pm.test(\"每条岗位都匹配关键词\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(data.items.length > 0).to.eql(true);",
+              "    data.items.forEach(function (job) {",
+              "        const text = [job.title, job.city, job.description].join(\" \").toLowerCase();",
+              "        pm.expect(text.includes(\"python\")).to.eql(true);",
+              "    });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/jobs?city=%E8%A5%BF%E5%AE%89&keyword=Python",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "jobs"
+          ],
+          "query": [
+            {
+              "key": "city",
+              "value": "西安"
+            },
+            {
+              "key": "keyword",
+              "value": "Python"
+            }
+          ]
+        },
+        "description": "V1a-02 可选查询参数用例。无请求体，保持只读；不固定具体岗位数量。"
+      },
+      "response": []
+    },
+    {
+      "name": "05 没有匹配岗位",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// 这段脚本放在后置操作：检查真实响应，不修改服务端数据。",
+              "pm.test(\"岗位列表返回 200\", function () {",
+              "    pm.expect(pm.response.code).to.eql(200);",
+              "});",
+              "pm.test(\"响应类型是 JSON\", function () {",
+              "    const contentType = pm.response.headers.get(\"Content-Type\") || \"\";",
+              "    pm.expect(contentType.toLowerCase().includes(\"application/json\")).to.eql(true);",
+              "});",
+              "pm.test(\"响应包含合法的 total 和 items\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(data !== null && typeof data === \"object\" && !Array.isArray(data)).to.eql(true);",
+              "    pm.expect(Number.isInteger(data.total) && data.total >= 0).to.eql(true);",
+              "    pm.expect(Array.isArray(data.items)).to.eql(true);",
+              "});",
+              "pm.test(\"total 与岗位数组长度一致\", function () {",
+              "    const data = pm.response.json();",
+              "    // 不固定为 11：合法的数据变化不应让契约测试失败。",
+              "    pm.expect(data.total).to.eql(data.items.length);",
+              "});",
+              "pm.test(\"岗位字段完整且符合基本规则\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(Array.isArray(data.items)).to.eql(true);",
+              "    data.items.forEach(function (job) {",
+              "        pm.expect(job !== null && typeof job === \"object\" && !Array.isArray(job)).to.eql(true);",
+              "        [\"title\", \"city\", \"description\", \"source_url\"].forEach(function (field) {",
+              "            pm.expect(typeof job[field]).to.eql(\"string\");",
+              "            pm.expect(job[field].trim().length > 0).to.eql(true);",
+              "            pm.expect(job[field]).to.eql(job[field].trim());",
+              "        });",
+              "        pm.expect(/^https?:\\/\\/[^\\s/]+(?:[/?#][^\\s]*)?$/i.test(job.source_url)).to.eql(true);",
+              "    });",
+              "    // 空数组也是合法结果；逐条检查在此时没有要遍历的元素。",
+              "});",
+              "",
+              "pm.test(\"无匹配是正常空列表\", function () {",
+              "    pm.expect(pm.response.json()).to.eql({total: 0, items: []});",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/jobs?city=%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E5%9F%8E%E5%B8%82",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "jobs"
+          ],
+          "query": [
+            {
+              "key": "city",
+              "value": "不存在的城市"
+            }
+          ]
+        },
+        "description": "V1a-02 可选查询参数用例。无请求体，保持只读；不固定具体岗位数量。"
+      },
+      "response": []
+    },
+    {
+      "name": "06 空白条件不限制",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// 这段脚本放在后置操作：检查真实响应，不修改服务端数据。",
+              "pm.test(\"岗位列表返回 200\", function () {",
+              "    pm.expect(pm.response.code).to.eql(200);",
+              "});",
+              "pm.test(\"响应类型是 JSON\", function () {",
+              "    const contentType = pm.response.headers.get(\"Content-Type\") || \"\";",
+              "    pm.expect(contentType.toLowerCase().includes(\"application/json\")).to.eql(true);",
+              "});",
+              "pm.test(\"响应包含合法的 total 和 items\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(data !== null && typeof data === \"object\" && !Array.isArray(data)).to.eql(true);",
+              "    pm.expect(Number.isInteger(data.total) && data.total >= 0).to.eql(true);",
+              "    pm.expect(Array.isArray(data.items)).to.eql(true);",
+              "});",
+              "pm.test(\"total 与岗位数组长度一致\", function () {",
+              "    const data = pm.response.json();",
+              "    // 不固定为 11：合法的数据变化不应让契约测试失败。",
+              "    pm.expect(data.total).to.eql(data.items.length);",
+              "});",
+              "pm.test(\"岗位字段完整且符合基本规则\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(Array.isArray(data.items)).to.eql(true);",
+              "    data.items.forEach(function (job) {",
+              "        pm.expect(job !== null && typeof job === \"object\" && !Array.isArray(job)).to.eql(true);",
+              "        [\"title\", \"city\", \"description\", \"source_url\"].forEach(function (field) {",
+              "            pm.expect(typeof job[field]).to.eql(\"string\");",
+              "            pm.expect(job[field].trim().length > 0).to.eql(true);",
+              "            pm.expect(job[field]).to.eql(job[field].trim());",
+              "        });",
+              "        pm.expect(/^https?:\\/\\/[^\\s/]+(?:[/?#][^\\s]*)?$/i.test(job.source_url)).to.eql(true);",
+              "    });",
+              "    // 空数组也是合法结果；逐条检查在此时没有要遍历的元素。",
+              "});",
+              "",
+              ""
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/jobs?city=%20%20%20&keyword=%20%20%20",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "jobs"
+          ],
+          "query": [
+            {
+              "key": "city",
+              "value": "   "
+            },
+            {
+              "key": "keyword",
+              "value": "   "
+            }
+          ]
+        },
+        "description": "V1a-02 可选查询参数用例。无请求体，保持只读；不固定具体岗位数量。 空白条件应忽略；是否与无参数结果一致，可与已有获取全部岗位请求对比，pytest 会使用固定样例验证。"
+      },
+      "response": []
+    }
+  ]
+}
