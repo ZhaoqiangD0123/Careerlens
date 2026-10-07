@@ -35,7 +35,7 @@ def test_returns_job_list_without_changing_file(tmp_path: Path) -> None:
 
     assert response.status_code == 200
     assert response.headers["content-type"].startswith("application/json")
-    assert response.json() == {"total": 2, "items": jobs}
+    assert response.json() == {"total": 2, "items": jobs, "limit": 20, "offset": 0}
     assert file_path.read_bytes() == original_content
 
 
@@ -47,23 +47,23 @@ def test_returns_success_for_empty_data(tmp_path: Path) -> None:
         response = client.get("/jobs")
 
     assert response.status_code == 200
-    assert response.json() == {"total": 0, "items": []}
+    assert response.json() == {"total": 0, "items": [], "limit": 20, "offset": 0}
 
 
-def test_uses_default_file_in_startup_directory(
+def test_does_not_use_default_file_in_startup_directory(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     data_directory = tmp_path / "data"
     data_directory.mkdir()
     (data_directory / "deduplicated_jobs.json").write_text("[]", encoding="utf-8")
-    # 模拟用户在项目根目录启动，确认默认数据源的约定没有写错。
+    # 即使旧 JSON 存在，缺少数据库配置也不能静默回退文件。
     monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("CAREERLENS_DB_PASSWORD", raising=False)
 
     with TestClient(create_app()) as client:
         response = client.get("/jobs")
 
-    assert response.status_code == 200
-    assert response.json() == {"total": 0, "items": []}
+    assert response.status_code == 503
 
 
 def test_returns_500_for_missing_file(tmp_path: Path) -> None:
@@ -113,14 +113,14 @@ def test_reads_file_again_on_each_request(tmp_path: Path) -> None:
     file_path.write_text("[]", encoding="utf-8")
 
     with TestClient(create_app(file_path)) as client:
-        assert client.get("/jobs").json() == {"total": 0, "items": []}
+        assert client.get("/jobs").json() == {"total": 0, "items": [], "limit": 20, "offset": 0}
         jobs = [sample_job()]
         # 修改仅限测试的临时文件，用来证明服务没有缓存第一次结果。
         file_path.write_text(json.dumps(jobs, ensure_ascii=False), encoding="utf-8")
         response = client.get("/jobs")
 
     assert response.status_code == 200
-    assert response.json() == {"total": 1, "items": jobs}
+    assert response.json() == {"total": 1, "items": jobs, "limit": 20, "offset": 0}
 
 
 def test_provides_docs_and_handles_wrong_requests(tmp_path: Path) -> None:
@@ -182,7 +182,7 @@ def test_filters_jobs_using_optional_query_parameters(
     expected = [jobs[index] for index in expected_indices]
     assert response.status_code == 200
     # 同时检查具体岗位、顺序和计数，防止只有数量正确却返回了错误岗位。
-    assert response.json() == {"total": len(expected), "items": expected}
+    assert response.json() == {"total": len(expected), "items": expected, "limit": 20, "offset": 0}
     assert file_path.read_bytes() == original_content
 
 
@@ -191,7 +191,7 @@ def test_documents_optional_query_parameters(tmp_path: Path) -> None:
         schema = client.get("/openapi.json").json()
 
     parameters = schema["paths"]["/jobs"]["get"]["parameters"]
-    assert {parameter["name"] for parameter in parameters} == {"city", "keyword"}
+    assert {parameter["name"] for parameter in parameters} == {"city", "keyword", "limit", "offset"}
     assert all(parameter["in"] == "query" for parameter in parameters)
     assert all(not parameter["required"] for parameter in parameters)
 
@@ -315,7 +315,7 @@ def test_body_validation_does_not_change_stored_jobs(tmp_path: Path, description
         after = client.get("/jobs").json()
 
     assert response.status_code == (200 if description.strip() else 422)
-    assert before == after == {"total": 1, "items": [sample_job()]}
+    assert before == after == {"total": 1, "items": [sample_job()], "limit": 20, "offset": 0}
     assert file_path.read_bytes() == original_content
 
 

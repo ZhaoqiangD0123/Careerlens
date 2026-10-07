@@ -9,3 +9,11 @@ wheels/
 
 # Virtual environments
 .venv
+
+# PostgreSQL data directory
+src/careerlens/Postgresq-test.sql
+
+# 本机配置可能包含秘密；只允许提交无密码的配置模板。
+.env
+.env.*
+!.env.example

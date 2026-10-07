@@ -4,7 +4,7 @@ CareerLens 是一个面向 AI 求职研究的学习型项目。项目将逐步�
 
 ## 当前进度
 
-目前可以校验、清洗、过滤和去重岗位数据，并通过命令行展示、搜索、筛选、统计和导出 Markdown 报告。FastAPI 的 `GET /jobs` 支持可选 city 和 keyword 查询参数；`POST /jobs/validate` 接收单条 JSON 并返回清洗结果，只校验，不保存岗位。
+目前可以校验、清洗、过滤和去重岗位数据，并通过命令行展示、搜索、筛选、统计和导出 Markdown 报告。FastAPI 的 `GET /jobs` 默认查询 PostgreSQL，支持 city/keyword 的 SQL 筛选与 limit/offset 分页；`POST /jobs/validate` 接收单条 JSON 并返回清洗结果，只校验，不保存岗位。
 
 `validate_job(job)` 接收字典或其他映射对象，并检查以下必填字段：
 
@@ -25,11 +25,14 @@ careerlens/
 │  ├─ __init__.py
 │  ├─ api.py
 │  ├─ catalog.py
+│  ├─ database.py
 │  ├─ deduplicate_jobs.py
 │  ├─ export_report.py
 │  ├─ explore_jobs.py
 │  ├─ filter_jobs.py
 │  ├─ job_files.py
+│  ├─ import_jobs.py
+│  ├─ job_repository.py
 │  ├─ validator.py
 │  └─ validate_file.py
 ├─ tests/
@@ -74,7 +77,7 @@ uv sync --group dev
 ## 运行测试
 
 ```powershell
-uv run pytest -v
+uv run --no-env-file pytest -v
 ```
 
 pytest 会自动查找 `tests/` 中以 `test_` 开头的测试函数。目前测试覆盖：
@@ -96,10 +99,15 @@ pytest 会自动查找 `tests/` 中以 `test_` 开头的测试函数。目前测
 
 ```powershell
 uv sync --group dev
-uv run uvicorn careerlens.api:app --host 127.0.0.1 --port 8000 --reload
+# 先在本机 .env 填写数据库密码；显式加载配置后启动。
+uv run --env-file .env uvicorn careerlens.api:app --host 127.0.0.1 --port 8000 --reload
 ```
 
 终端保持运行，按 `Ctrl+C` 停止。`careerlens.api:app` 指定模块及应用对象；Uvicorn 监听本机 8000 端口，FastAPI 按请求方法与路径调用处理函数。`--reload` 仅用于开发，代码修改后自动重启。
+
+首次克隆时，从 `.env.example` 复制出本机 `.env`，填写真实密码；不要覆盖已有配置。`.env` 已被 Git 忽略，模板不含密码、可以提交。该文件是明文，不是加密保险箱；不要把秘密写到 `.gitignore` 注释、源码、截图或聊天里。仅创建文件不会自动加载，启动必须使用 `--env-file .env`；已有同名进程环境变量优先。修改配置后完整重启服务，不只等待热重载。
+
+完整配置、前提与 Apifox 验收见 [数据库 API 运行指南](docs/database-api-guide.md)。默认读取数据库，密码仍为空时 GET /jobs 返回 503，而不是自动读旧 JSON；首页和请求体校验不依赖数据库。
 
 - 岗位列表：`http://127.0.0.1:8000/jobs`
 - 交互式接口文档：`http://127.0.0.1:8000/docs`
@@ -107,28 +115,33 @@ uv run uvicorn careerlens.api:app --host 127.0.0.1 --port 8000 --reload
 
 ### GET /jobs 契约与数据流
 
-客户端 → Uvicorn → FastAPI 解析 city/keyword → `job_files.load_validated_jobs` → `catalog.filter_jobs` → `catalog.search_jobs` → JSON 响应。
+客户端 → Uvicorn → FastAPI 验证查询参数 → `job_repository.query_database_jobs` → psycopg → PostgreSQL WHERE / COUNT / ORDER BY / LIMIT / OFFSET → 校验当前页 → total/items/limit/offset JSON。
 
-数据源固定为启动目录下的 `data/deduplicated_jobs.json`。服务每次请求读取并校验文件，不接受客户端指定本机文件路径，不写文件、不重新去重，也不生成报告。数据应提前由已有过滤、去重命令生成；报告导出本身不会保存中间 JSON 文件。
+默认数据源为配置的 PostgreSQL `public.jobs`。每次在 SQL 中先筛选，按 id 升序返回一页；COUNT 与页查询使用同一个只读 REPEATABLE READ 快照，复用岗位规则仅校验当前页。不写数据、不重新去重、不生成报告。JSON 仍用于 CLI、导入输入和显式临时文件测试，不是服务自动回退来源。
 
 | 场景 | 状态码与结果 |
 | --- | --- |
-| 正常读取 | 200，`{"total": 83, "items": [...]}`；无参数时返回全部，筛选后 total 为匹配数量 |
-| 文件内容为 `[]` | 200，`{"total": 0, "items": []}` |
-| 文件缺失、无法读取、JSON 损坏或含非法岗位 | 500，`{"detail": "岗位数据暂时不可用，请检查服务端数据文件"}` |
+| 正常读取 | 200，`{"total": 83, "items": [...], "limit": 20, "offset": 0}`；默认最多 20 条，total 为分页前匹配总数 |
+| 空库或无匹配 | 200，`{"total": 0, "items": [], "limit": 20, "offset": 0}` |
+| 配置缺失/不合法、连接/认证失败、连接中断或查询超时 | 503，`{"detail": "岗位数据库暂时不可用，请检查服务端配置与数据库连接"}` |
+| 缺表、结构错误或当前页含非法/未清洗岗位 | 500，`{"detail": "岗位数据异常，请检查服务端数据库"}` |
+| limit/offset 类型或范围不合法 | 422，连接数据库前拒绝 |
+| offset 超过匹配数 | 200，items=[]，total 保留全部匹配数 |
 | 请求未知路径 | 404 |
 | 使用 POST 请求 `/jobs` | 405，方法不允许 |
 
-`items` 中每个岗位包含 `title`、`city`、`description` 和 `source_url`。遇到非法岗位时不会静默过滤后返回部分成功数据。详细错误写入服务端日志，响应不暴露本机文件路径。服务未启动时是连接失败，通常没有 HTTP 状态码。
+`items` 中每个岗位包含 `title`、`city`、`description` 和 `source_url`，本版不增加 id。当前页有非法岗位时不会静默返回部分成功；页外或未匹配的坏数据不保证发现，COUNT 不是内容审计。日志只记录固定错误类别，响应不暴露路径、凭据或原始驱动错误。服务未启动时是连接失败，通常没有 HTTP 状态码。
 
-### 城市和关键词查询
+### 城市、关键词与分页
 
 | 参数 | 规则 |
 | --- | --- |
 | city | 城市精确匹配，去首尾空格，英文不区分大小写 |
-| keyword | 对岗位名称、城市、描述的拼接文本做包含搜索，去首尾空格，英文不区分大小写 |
+| keyword | 对岗位名称、城市、描述的拼接文本作字面包含搜索，去首尾空格、不区分大小写，不搜索来源 URL |
+| limit | 整数，默认 20，范围 1—100 |
+| offset | 整数，默认 0，非负，跳过匹配记录数，不是 id 或页码 |
 
-两个参数均可选，不传、空字符串或仅空白时不限制对应条件。组合条件是 AND，必须同时满足；返回顺序沿用文件顺序。无匹配是 200 空列表，不是 404。查询仍读取完整文件后在内存筛选，不包含分页、数据库或智能语义搜索。
+四个参数均可选；city/keyword，不传、空字符串或仅空白时不限制对应条件。组合条件是 AND，必须同时满足；返回顺序为 id 升序。无匹配是 200 空列表，不是 404。SQL 先筛选再分页；关键词特殊字符为字面字符，使用 PostgreSQL 18/UTF8 的 casefold 与 pg_unicode_fast。只减少返回量，不承诺数据库不用扫描或性能已达标。不是智能语义搜索。
 
 ```text
 GET /jobs?city=杭州
@@ -136,7 +149,7 @@ GET /jobs?keyword=FastAPI
 GET /jobs?city=杭州&keyword=FastAPI
 ```
 
-中文 URL 仅作易读展示，可以在 Apifox Params 中填写并由客户端编码。响应 total 始终等于当前 items 的长度，不固定为全库数量。
+中文 URL 仅作易读展示，可以在 Apifox Params 中填写并由客户端编码。响应 total 是分页前的匹配数，不再总等于 items 的长度。例如 /jobs?limit=20&offset=80 在 83 条基线下 total=83、本页 3 条。详见 [分页运行与验收](docs/pagination-guide.md)。
 
 ### POST /jobs/validate：校验请求体
 
@@ -168,8 +181,8 @@ Body 发送单条 JSON 对象，Content-Type 为 `application/json`：
 
 - 方法：`GET`；
 - URL：`http://127.0.0.1:8000/jobs`；
-- 获取全部岗位时无需 Params；筛选时在 Params 填写 city、keyword，无需请求体或认证；
-- 发送后核对状态码 200、响应的 `total` 与 `items` 数量是否一致；
+- 获取第一页无需 Params；在 Params 填写 city、keyword、limit、offset，无需请求体或认证；
+- 发送后核对状态码 200、响应的 `total`、本页 `items` 长度及 limit/offset 回显；
 - 用 `/unknown` 对比 404，再把 `/jobs` 方法改为 POST 对比 405。
 
 Apifox 是客户端，不负责启动 Python 服务。接口自动化测试仍通过 `uv run pytest -v` 运行；TestClient 在进程内调用应用，不需要先启动 Uvicorn。当前 Starlette 测试客户端使用 `httpx2`，因此将它列为开发依赖，见 [官方 TestClient 文档](https://www.starlette.io/testclient/)。
@@ -180,7 +193,7 @@ Apifox 是客户端，不负责启动 Python 服务。接口自动化测试仍�
 
 新增 [请求体校验练习集合](docs/careerlens.validation.postman_collection.json)，包含九个 POST /jobs/validate 用例，覆盖清洗成功、缺字段、类型错误、空白字段、FTP 地址、数组、错误 JSON、无请求体和额外字段。请在 Body 而不是 Params 中填写岗位；422 用例是预期输入失败。集合后置脚本已在本地 pm 兼容环境针对真实 HTTP 响应验证，实际 Apifox 导入仍需用户核对。
 
-第一版仅供本机学习：无认证、分页或缓存，不应直接暴露到公网。同步文件读取使用普通 `def` 路由，框架将其放在线程池中执行，见 [FastAPI 同步与异步说明](https://fastapi.tiangolo.com/async/)。
+第一版仅供本机学习：无认证、连接池或缓存，不应直接暴露到公网。同步数据库读取使用普通 `def` 依赖，框架在线程池中执行，见 [FastAPI 同步与异步说明](https://fastapi.tiangolo.com/async/)。
 
 ## 校验 JSON 文件
 
@@ -289,6 +302,19 @@ print(cleaned_job)
 }
 ```
 
+## 导入 PostgreSQL
+
+已有独立练习数据库和岗位表后，可将**已清洗去重**的文件导入：
+
+```powershell
+# 与 HTTP 服务共用本机 .env；若密码为空且是普通终端，仍会隐藏提示输入。
+uv run --env-file .env python -X utf8 -m careerlens.import_jobs data/deduplicated_jobs.json
+```
+
+数据库中已有 `source_url` 跳过、不覆盖旧记录；其他数据库故障整批回滚。输入无效、未清洗或文件内重复时整批拒绝，不修改原文件，也不自动创建或清空表。命令显示文件数、新增数、跳过数和数据库总数。
+
+默认连接本机 `127.0.0.1:5433` 的 `careerlens_learning`，配置、随机密码恢复、两次导入验收与真实数据库测试见 [数据库导入指南](docs/database-import-guide.md)。用户已实际导入并重跑：首次新增 83，重跑跳过 83，当前总数 83；教学记录现已不在表中，之前保留三条时的 86 只是条件预期。HTTP 默认读取数据库，启动另需服务进程配置，见 [数据库 API 指南](docs/database-api-guide.md)。
+
 ## 当前限制
 
 - `source_url` 只检查协议和基本结构，不访问网络，也不保证页面真实存在。
@@ -300,4 +326,4 @@ print(cleaned_job)
 
 1. 扩充岗位字段和真实样本数据。
 2. 为搜索增加排序和组合条件。
-3. 体验请求体与参数校验，再接入 SQL/PostgreSQL。
+3. 验收 SQL 筛选与分页，然后学习持久化写入接口、冲突与事务。
